@@ -1,0 +1,46 @@
+agreement_id,label_id,platform,market,label_share_pct
+D001,L01,Spotify,GB,0.69
+D002,L01,Spotify,US,0.79
+D003,L01,Spotify,DE,0.8
+D004,L01,Spotify,JP,0.77
+D005,L01,Spotify,KR,0.65
+D006,L01,Apple Music,GB,0.74
+D007,L01,Apple Music,US,0.8
+D008,L01,Apple Music,DE,0.71
+D009,L01,Apple Music,JP,0.7
+D010,L01,Apple Music,KR,0.74
+D011,L01,YouTube Music,GB,0.73
+D012,L01,YouTube Music,US,0.73
+D013,L01,YouTube Music,DE,0.73
+D014,L01,YouTube Music,JP,0.69
+D015,L01,YouTube Music,KR,0.75
+D016,L02,Spotify,GB,0.76
+D017,L02,Spotify,US,0.77
+D018,L02,Spotify,DE,0.74
+D019,L02,Spotify,JP,0.77
+D020,L02,Spotify,KR,0.79
+D021,L02,Apple Music,GB,0.78
+D022,L02,Apple Music,US,0.71
+D023,L02,Apple Music,DE,0.71
+D024,L02,Apple Music,JP,0.74
+D025,L02,Apple Music,KR,0.65
+D026,L02,YouTube Music,GB,0.75
+D027,L02,YouTube Music,US,0.78
+D028,L02,YouTube Music,DE,0.78
+D029,L02,YouTube Music,JP,0.73
+D030,L02,YouTube Music,KR,0.67
+D031,L03,Spotify,GB,0.78
+D032,L03,Spotify,US,0.8
+D033,L03,Spotify,DE,0.77
+D034,L03,Spotify,JP,0.79
+D035,L03,Spotify,KR,0.77
+D036,L03,Apple Music,GB,0.67
+D037,L03,Apple Music,US,0.65
+D038,L03,Apple Music,DE,0.77
+D039,L03,Apple Music,JP,0.68
+D040,L03,Apple Music,KR,0.67
+D041,L03,YouTube Music,GB,0.66
+D042,L03,YouTube Music,US,0.74
+D043,L03,YouTube Music,DE,0.67
+D044,L03,YouTube Music,JP,0.69
+D045,L03,YouTube Music,KR,0.69

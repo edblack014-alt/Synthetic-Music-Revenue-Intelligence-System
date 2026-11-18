@@ -1,0 +1,31 @@
+track_id,track_name,artist_id,artist_name,label_id,label_name,popularity_weight
+T001,Recording 01,A01,Neon Transit,L01,Northline Records,2.25
+T002,Recording 02,A01,Neon Transit,L01,Northline Records,1.89
+T003,Recording 03,A01,Neon Transit,L01,Northline Records,0.85
+T004,Recording 04,A02,Amber Lines,L02,Juniper Sound,1.21
+T005,Recording 05,A02,Amber Lines,L02,Juniper Sound,1.89
+T006,Recording 06,A02,Amber Lines,L02,Juniper Sound,0.56
+T007,Recording 07,A03,Low Tide,L03,Atlas Audio,1.67
+T008,Recording 08,A03,Low Tide,L03,Atlas Audio,2.65
+T009,Recording 09,A03,Low Tide,L03,Atlas Audio,1.13
+T010,Recording 10,A04,Glass Avenue,L01,Northline Records,1.95
+T011,Recording 11,A04,Glass Avenue,L01,Northline Records,0.51
+T012,Recording 12,A04,Glass Avenue,L01,Northline Records,2.23
+T013,Recording 13,A05,Northern Echo,L02,Juniper Sound,1.08
+T014,Recording 14,A05,Northern Echo,L02,Juniper Sound,2.62
+T015,Recording 15,A05,Northern Echo,L02,Juniper Sound,0.88
+T016,Recording 16,A06,Silver Pines,L03,Atlas Audio,1.39
+T017,Recording 17,A06,Silver Pines,L03,Atlas Audio,1.86
+T018,Recording 18,A06,Silver Pines,L03,Atlas Audio,0.5
+T019,Recording 19,A07,Night Orchard,L01,Northline Records,1.29
+T020,Recording 20,A07,Night Orchard,L01,Northline Records,0.54
+T021,Recording 21,A07,Night Orchard,L01,Northline Records,1.35
+T022,Recording 22,A08,Sundown Club,L02,Juniper Sound,1.36
+T023,Recording 23,A08,Sundown Club,L02,Juniper Sound,1.08
+T024,Recording 24,A08,Sundown Club,L02,Juniper Sound,0.65
+T025,Recording 25,A09,Afterimage,L03,Atlas Audio,1.53
+T026,Recording 26,A09,Afterimage,L03,Atlas Audio,0.96
+T027,Recording 27,A09,Afterimage,L03,Atlas Audio,1.53
+T028,Recording 28,A10,The Satellites,L01,Northline Records,0.85
+T029,Recording 29,A10,The Satellites,L01,Northline Records,0.51
+T030,Recording 30,A10,The Satellites,L01,Northline Records,2

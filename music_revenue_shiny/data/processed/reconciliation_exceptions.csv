@@ -1,0 +1,3 @@
+month,label_id,label_name,market,ledger_entry_id,streaming_records,expected_label_revenue_gbp,recorded_label_revenue_gbp,variance_gbp,reconciliation_status
+2026-01-01,L02,Juniper Sound,DE,F0006,27,458.05,583.45,125.4,Mismatch
+2026-02-01,L02,Juniper Sound,GB,F0022,27,651.33,561.33,-90,Mismatch
