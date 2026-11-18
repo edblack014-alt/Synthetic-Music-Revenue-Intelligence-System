@@ -32,7 +32,7 @@ I built this project to explore those questions using a reproducible synthetic-d
 ## How the system works
 
 
-```
+``` mermaid
 flowchart TD
     A["R: Synthetic data generation"] --> B["CSV source files"]
 
