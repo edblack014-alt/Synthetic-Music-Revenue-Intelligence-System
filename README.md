@@ -1,4 +1,5 @@
 Music Revenue Intelligence
+
 An end-to-end music revenue analytics and reconciliation project built with R, SQL, Google BigQuery and Shiny.
 
 Streaming data can tell us how many times a recording was played. It is less straightforward to explain what those streams mean commercially: which markets generate the most revenue, why revenue changes between periods, how much should be allocated to a label, and whether that allocation agrees with the finance records.
