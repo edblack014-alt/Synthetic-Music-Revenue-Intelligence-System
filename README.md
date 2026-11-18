@@ -32,6 +32,7 @@ I built this project to explore those questions using a reproducible synthetic-d
 ## How the system works
 
 
+```
 flowchart TD
     A["R: Synthetic data generation"] --> B["CSV source files"]
 
@@ -45,7 +46,7 @@ flowchart TD
     B --> H["Local CSV mode"]
     H --> I["R: Local data preparation"]
     I --> G
-
+```
 
 | Layer | Implementation |
 |---|---|
