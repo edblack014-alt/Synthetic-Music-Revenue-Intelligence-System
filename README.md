@@ -31,18 +31,21 @@ I built this project to explore those questions using a reproducible synthetic-d
 
 ## How the system works
 
-```mermaid
-flowchart LR
-    A["R: synthetic data generator"] --> B["CSV source files"]
-    B --> C["R: validation and ingestion"]
+
+flowchart TD
+    A["R: Synthetic data generation"] --> B["CSV source files"]
+
+    B --> C["R: Data validation and ingestion"]
     C --> D[("Google BigQuery")]
-    D --> E["SQL: catalogue / agreement joins"]
-    E --> F["SQL: allocation and reconciliation"]
-    E --> G["R Shiny dashboard"]
-    F --> G
+
+    D --> E["SQL: Catalogue and agreement joins"]
+    E --> F["SQL: Revenue allocation and reconciliation"]
+    F --> G["R Shiny dashboard"]
+
     B --> H["Local CSV mode"]
-    H --> G
-```
+    H --> I["R: Local data preparation"]
+    I --> G
+
 
 | Layer | Implementation |
 |---|---|
