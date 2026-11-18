@@ -5,7 +5,7 @@ An end-to-end music revenue analytics and reconciliation project built with R, S
 Streaming data can tell us how many times a recording was played. It is less straightforward to explain what those streams mean commercially: which markets generate the most revenue, why revenue changes between periods, how much should be allocated to a label, and whether that allocation agrees with the finance records.
 
 I built this project to explore those questions through a reproducible data pipeline and an interactive reporting application. It brings together my interests in music, economics and data storytelling, with a particular focus on turning financial data into useful explanations rather than simply presenting totals.
-Data disclosure: This is an independent portfolio project using entirely synthetic data. Artists, labels, streaming statements, commercial rates, distribution agreements, FX assumptions and ledger entries are fictional. The project is not affiliated with any music company or streaming service.
+Data disclosure: This is an independent portfolio project using entirely synthetic data. Artists, labels, streaming statements, commercial rates, distribution agreements, FX assumptions and ledger entries are fictional. T
 
 The questions I wanted to answer
 - Commercial performance: Which platforms, markets and artists contribute most to gross streaming revenue? How efficiently does each market monetise its streams?
@@ -14,7 +14,7 @@ The questions I wanted to answer
 - Operational follow-up: How could an analyst document exceptions, propose corrections and communicate the findings clearly?
 What I built
 Component	Implementation
-Synthetic data generation	Seeded R scripts generate track-level streaming statements, artist and label catalogue records, distribution agreements and a simulated finance ledger. An optional extended scenario adds South Korea, fictional FX assumptions and deal terms.
+Synthetic data generation	Seeded R scripts generate track-level streaming statements, artist and label catalogue records, distribution agreements and a simulated finance ledger. 
 Data engineering	A repeatable R pipeline validates source keys and required fields, uploads tables to BigQuery and refreshes reporting views.
 SQL modelling	BigQuery views enrich streaming records with artist, label and agreement information, calculate expected label allocations and reconcile these with finance records.
 Commercial reporting	An R Shiny dashboard uses Plotly and DT to visualise revenue trends, artist contribution, monetisation, platform and market mix, and a volume/mix/rate bridge.
@@ -85,8 +85,6 @@ Monthly reconciliation groups	90
 Deliberately seeded finance discrepancies	2
 
 
-The original generator produces a smaller four-market version. All rates and FX movements are illustrative, not observed industry payouts or historical exchange rates.
-Run the project locally
 You need R 4.1+ and RStudio (recommended). Clone or download the repository and set the working directory to the folder containing app.R.
 
 1. Install packages (first run only):
@@ -94,8 +92,8 @@ install.packages(c(
   "shiny", "bslib", "dplyr", "plotly", "DT", "readr",
   "DBI", "bigrquery", "tidyverse"
 ))
-2. Generate the extended sample data:
-source("generate_data_extended.R")
+2. Generate the sample data:
+source("generate_data.R")
 This creates the data/raw/ CSV files; they are deliberately not committed to the repository.
 
 3. Run validation tests:
