@@ -1,122 +1,131 @@
 Music Revenue Intelligence
+An end-to-end music revenue analysis and reconciliation project built with R, SQL, Google BigQuery and Shiny.
 
-An end-to-end music revenue analytics and reconciliation project built with R, SQL, Google BigQuery and Shiny.
+Streaming data tells us how many times a recording was played. But what do those streams mean commercially? Which markets and artists generate revenue, what explains changes between months, and do the amounts allocated to labels agree with the financial records?
 
-Streaming data can tell us how many times a recording was played. It is less straightforward to explain what those streams mean commercially: which markets generate the most revenue, why revenue changes between periods, how much should be allocated to a label, and whether that allocation agrees with the finance records.
-
-I built this project to explore those questions through a reproducible data pipeline and an interactive reporting application. It brings together my interests in music, economics and data storytelling, with a particular focus on turning financial data into useful explanations rather than simply presenting totals.
-Data disclosure: This is an independent portfolio project using entirely synthetic data. Artists, labels, streaming statements, commercial rates, distribution agreements, FX assumptions and ledger entries are fictional. T
-
-The questions I wanted to answer
-- Commercial performance: Which platforms, markets and artists contribute most to gross streaming revenue? How efficiently does each market monetise its streams?
-- Revenue movements: Was month-on-month growth driven by more streams, a shift in the geographic mix, or changes in revenue per stream?
-- Financial control: Do expected label allocations agree with recorded finance amounts? Which differences deserve investigation?
-- Operational follow-up: How could an analyst document exceptions, propose corrections and communicate the findings clearly?
-What I built
-Component	Implementation
-Synthetic data generation	Seeded R scripts generate track-level streaming statements, artist and label catalogue records, distribution agreements and a simulated finance ledger. 
-Data engineering	A repeatable R pipeline validates source keys and required fields, uploads tables to BigQuery and refreshes reporting views.
-SQL modelling	BigQuery views enrich streaming records with artist, label and agreement information, calculate expected label allocations and reconcile these with finance records.
-Commercial reporting	An R Shiny dashboard uses Plotly and DT to visualise revenue trends, artist contribution, monetisation, platform and market mix, and a volume/mix/rate bridge.
-Financial operations	An exception register records suspected causes, owners and follow-up notes. A separate page demonstrates illustrative minimum-guarantee top-ups and proposed rebills.
-Quality controls	Checks cover missing values, duplicate source keys, unmatched catalogue or agreement records, and reconciliation outcomes.
+I built this project to explore those questions through a reproducible data pipeline and an interactive dashboard. It brings together my interests in music, economics and data storytelling, with an emphasis on explaining financial performance and identifying issues worth investigating.
+Portfolio project — synthetic data only. All artists, labels, streaming activity, commercial rates, distribution agreements, FX assumptions and financial records are fictional. The project is not affiliated with a music company or streaming service.
 
 
-System architecture
+Commercial Performance: an overview of simulated revenue, streams, expected label revenue and monetisation across markets.
+At a glance
+	Extended demonstration dataset
+Reporting period	January–June 2026
+Markets	5 — US, UK, Germany, Japan and South Korea
+Streaming platforms	3
+Fictional artists / tracks	10 / 30
+Track-level streaming records	2,700
+Monthly label–market reconciliation groups	90
+Deliberately seeded reconciliation exceptions	2
+
+
+Questions I wanted to answer
+- Commercial performance: Which platforms, markets and artists contribute most to streaming revenue, and how efficiently does each market monetise streams?
+- Revenue movements: Is growth explained by more streams, changes in geographic market mix, or changes in revenue per stream?
+- Financial controls: Do expected label allocations agree with recorded amounts, and which differences need investigation?
+- Operational follow-up: How can an analyst document discrepancies, communicate findings and propose corrective action?
+How the system works
 ```mermaid
 flowchart LR
-    A[Reproducible R generators] --> B[CSV source data]
-    B --> C[R validation and upload pipeline]
-    C --> D[(Google BigQuery source tables)]
-    D --> E[SQL enrichment view]
-    E --> F[SQL reconciliation view]
-    E --> G[Shiny commercial reporting]
-    F --> H[Shiny reconciliation and deal operations]
-    B --> I[Local CSV / dplyr mode]
-    I --> G
-    I --> H
+    A[R synthetic data generators] --> B[CSV source data]
+    B --> C[R validation and ingestion pipeline]
+    C --> D[(Google BigQuery tables)]
+    D --> E[SQL enrichment and allocation]
+    E --> F[SQL financial reconciliation]
+    E --> G[Shiny dashboard]
+    F --> G
+    B --> H[Local CSV mode]
+    H --> G
 ```
-The dashboard can read from BigQuery or work with locally generated CSVs. Its Refresh button retrieves the latest available source data; it does not rerun or schedule the ingestion pipeline.
+Layer	Implementation
+Data generation	R creates synthetic streaming statements, catalogue records, distribution agreements, ledger entries and optional fictional FX/deal terms.
+Ingestion and quality checks	R validates source records, loads tables into BigQuery and refreshes SQL reporting views.
+Transformation	BigQuery SQL joins streaming activity to catalogue and agreements, calculates label allocations and compares them with the finance ledger.
+Analysis and reporting	R Shiny, Plotly and DT provide interactive revenue analysis, financial exception reporting, commentary and illustrative deal operations.
+
+
+The dashboard can use BigQuery or local CSVs. Its Refresh data button reloads the chosen source; it does not rerun or schedule the ingestion pipeline.
 Dashboard walkthrough
-1. Commercial Performance
-The reporting page tracks gross streaming revenue, streaming volume, revenue per 1,000 streams and expected label revenue. Interactive filters let users explore the results by period, market, label and platform.
+1. Commercial Performance — explaining the numbers
+The commercial dashboard tracks gross revenue, stream counts, revenue per 1,000 streams and expected label revenue. Users can filter the results by reporting period, market, label and platform.
 
-The part I found most interesting to build was the revenue bridge. Rather than just reporting that revenue increased, it decomposes the difference between the last two selected months into:
-1. Streaming volume: the effect of a change in total streams, holding the previous market mix and monetisation constant.
-2. Market mix: the effect of streams shifting between higher- and lower-monetising markets.
+Rather than only reporting a month-on-month increase, I built a revenue bridge that decomposes the change into three components:
+1. Streaming volume: the effect of changes in the number of streams.
+2. Market mix: the effect of streams shifting between differently monetising markets.
 3. Within-market monetisation: the effect of changes in revenue per stream within each market.
-The contributions add back to the overall revenue change. This is a descriptive decomposition, not proof of what caused the underlying commercial movements.
 
-The dashboard also includes automatically generated observations, artist revenue share and a simple anomaly monitor. The original anomaly method compares each market with its preceding three months and flags deviations beyond two standard deviations. It is an exploratory screening tool—not a validated production detector.
-2. Revenue Reconciliation
-The model joins streaming statements to fictional commercial agreements to calculate an expected label allocation:
-Expected label allocation = Gross streaming revenue (GBP) × Label share
-Variance = Recorded label revenue − Expected label allocation
-Expected values are aggregated at month × label × market level before comparison with the simulated finance ledger. A record is treated as an exception when its counterpart is missing or the absolute, two-decimal difference exceeds £0.50. Smaller rounding differences are within tolerance and are excluded from exception-exposure KPIs.
+Revenue bridge and commentary: the simulated May–June increase of £945.15 is decomposed into a £834.76 volume contribution, a −£27.25 market-mix contribution and a £137.64 within-market monetisation contribution.
 
-The extended six-month synthetic scenario contains 90 reconciliation groups and two deliberately inserted differences:
-Scenario	Recorded less expected
-January 2026 · Juniper Sound · Germany	+£125.40
-February 2026 · Juniper Sound · United Kingdom	−£90.00
+The system also generates plain-language observations about revenue drivers, market concentration and potential commercial implications. In the example shown, the United States accounts for 39.5% of selected revenue and has the highest revenue per 1,000 streams (£3.11).
+
+These are descriptive calculations: the bridge reconciles mathematically but does not establish the causes of changes in listener behaviour or platform payments.
+<details>
+<summary><strong>More commercial analysis: platforms, artists and anomaly monitoring</strong></summary>
+The platform chart compares revenue by market, while the artist table brings together streams, gross revenue, revenue per 1,000 streams and contribution to the selected total.
+
+I also included an exploratory three-month rolling z-score monitor for market revenue and monetisation, flagging deviations beyond two standard deviations. With only six months of demonstration data, this is a screening illustration—not a reliable production anomaly detector or evidence of a financial error.
+</details>2. Revenue Reconciliation — detecting discrepancies
+The reconciliation compares calculated label allocations against the recorded simulated finance ledger:
+Expected label revenue = Gross streaming revenue (GBP) × Fictional label share
+Variance = Recorded label revenue − Expected label revenue
+Allocations are aggregated to month × label × market before matching. Missing counterparts are exceptions; otherwise, differences are classified as exceptions when the absolute variance, rounded to two decimal places, is greater than £0.50. Small rounding residuals within tolerance do not inflate the financial exposure figures.
+
+The six-month extended scenario produces 88 matches out of 90 groups (97.8%). Two discrepancies were deliberately inserted to test the workflow:
+Simulated exception	Recorded minus expected
+Jan 2026 · Juniper Sound · Germany	+£125.40
+Feb 2026 · Juniper Sound · United Kingdom	−£90.00
 Absolute exception exposure	£215.40
 Net exception variance	+£35.40
 
 
-That gives 88 of 90 groups within tolerance (97.8%). The dashboard distinguishes the absolute value of unresolved discrepancies from the net amount after offsetting positive and negative variances.
+The distinction between absolute exposure and net variance matters: positive and negative discrepancies can cancel in the net total without reducing the amount of individual differences that needs investigating.
 
-An editable follow-up register lets an analyst record ownership, a suspected cause, status and evidence. These notes are written to a local CSV; they do not change the finance ledger or post accounting adjustments.
-3. Deal Operations
-A separate page illustrates a simplified monthly minimum-guarantee scenario:
-Guarantee top-up = max(Monthly minimum guarantee − Expected allocation, 0)
+The exception register records the variance, direction, suspected cause, ownership and follow-up status. It is designed to help an analyst move from a numerical discrepancy to a documented investigation.
+<details>
+<summary><strong>See the issue follow-up form and data quality checks</strong></summary>
+Issue notes are stored locally, not posted to BigQuery or the finance ledger. Source checks cover missing values, duplicate keys and unmatched catalogue or agreement records. A suspected cause remains unverified until evidence is recorded.
+</details>3. Deal Operations — modelling a simplified commercial workflow
+The Deal Operations page simulates a fictional distribution arrangement with a monthly minimum guarantee:
+Expected allocation = Gross streaming revenue × Label share
+Guarantee top-up = max(Monthly minimum guarantee − Expected allocation, £0)
 Illustrative recharge = Expected allocation + Guarantee top-up
-It also shows proposed corrective rebills for investigation. These calculations demonstrate how a revenue-operations workflow might be presented; they are not a model of actual contract accounting or legally payable amounts.
-4. Methodology and Data Quality
-The final page documents data provenance, reconciliation rules, analytical assumptions and limitations. The quality checks help distinguish source-data problems from discrepancies arising during financial reconciliation.
-Demo dataset
-The extended synthetic dataset used in the screenshots covers January–June 2026:
-Dimension	Size
-Fictional artists / tracks	10 artists / 30 tracks
-Fictional labels	3
-Streaming platforms	3
-Markets	5: United Kingdom, United States, Germany, Japan and South Korea
-Months	6
-Track-level streaming records	2,700
-Monthly reconciliation groups	90
-Deliberately seeded finance discrepancies	2
 
+A deal-level worksheet shows the assumed terms and calculated top-ups. A further table converts the reconciliation differences into proposed corrective rebills for review—not accounting entries automatically posted to a ledger.
 
-You need R 4.1+ and RStudio (recommended). Clone or download the repository and set the working directory to the folder containing app.R.
+These are simplified, fictional rules used to demonstrate analytical workflow design; they do not represent actual music distribution contracts or legally payable amounts.
+4. Methodology and transparency
+The dashboard documents its assumptions, reconciliation tolerance, limitations and data provenance. I wanted the user to understand what the numbers mean, how they were calculated and when not to overinterpret them.
+<details>
+<summary><strong>See the Methodology & Limitations page</strong></summary>
+</details>Run the project locally
+Requires R 4.1+ (RStudio recommended). The generated CSVs are not committed to the repository; you can recreate them with the bundled script.
 
-1. Install packages (first run only):
+1. Install the packages:
 install.packages(c(
   "shiny", "bslib", "dplyr", "plotly", "DT", "readr",
   "DBI", "bigrquery", "tidyverse"
 ))
-2. Generate the sample data:
-source("generate_data.R")
-This creates the data/raw/ CSV files; they are deliberately not committed to the repository.
-
-3. Run validation tests:
+2. Generate the extended synthetic data:
+source("generate_data_extended.R")
+3. Run the included checks:
 source("tests/smoke_tests.R")
 source("tests/artist_leaderboard_smoke_test.R")
-4. Start the dashboard:
+4. Launch the dashboard:
 shiny::runApp(".", launch.browser = TRUE)
-In the sidebar, change Data source from Google BigQuery to Local CSVs. The default BigQuery connection may show an authentication error until you switch source; no cloud credentials are needed for the local demonstration.
-Optional: Run with BigQuery
-To reproduce the cloud workflow, configure a Google Cloud project and BigQuery dataset, authenticate in R, and run:
+Select Local CSVs in the sidebar. The initial BigQuery connection is optional and may require authentication; the local demonstration does not need Google Cloud access.
+Optional: reproduce the BigQuery workflow
+If you have your own Google Cloud project and BigQuery dataset, configure the project identifiers and authenticate in R. Then run:
 bigrquery::bq_auth()
 source("run_pipeline.R")
-shiny::runApp(".", launch.browser = TRUE)
-run_pipeline.R executes when sourced. It uploads the synthetic source tables, refreshes the SQL views and performs post-upload checks. The included SQL files contain the project's BigQuery identifiers, so update those identifiers before using a different cloud project. You can configure the R connection using MUSIC_BQ_PROJECT, MUSIC_BQ_DATASET and MUSIC_BQ_BILLING environment variables.
-
-Important: the demonstration pipeline uses table replacement (overwrite = TRUE). Do not point it at real production data. BigQuery permissions and billing may be required.
-Repository guide
+The pipeline executes when sourced. It uploads the synthetic tables, refreshes SQL views and performs checks. It replaces destination source tables; do not run it against real or production data. You may need BigQuery billing and permissions. Set your own project/dataset identifiers in the SQL files and use the MUSIC_BQ_PROJECT, MUSIC_BQ_DATASET and MUSIC_BQ_BILLING variables for the R connection.
+Repository structure
 music-revenue-intelligence/
-├── app.R                          # Interactive Shiny dashboard
+├── app.R
 ├── R/
-│   └── analytics.R                # Reconciliation, bridge and analysis helpers
-├── generate_data.R                # Sample Generator
-├── run_pipeline.R                 # BigQuery upload, SQL refresh and validation
+│   └── analytics.R
+├── generate_data.R
+├── generate_data_extended.R
+├── run_pipeline.R
 ├── sql/
 │   ├── 01_streaming_enriched.sql
 │   └── 02_revenue_reconciliation.sql
@@ -124,14 +133,22 @@ music-revenue-intelligence/
 │   ├── smoke_tests.R
 │   └── artist_leaderboard_smoke_test.R
 ├── screenshots/
-│   └── dashboard-overview.png
+│   ├── 01-commercial-performance-overview.png
+│   ├── 02-revenue-bridge-and-insights.png
+│   ├── 03-platforms-artists-anomaly-monitor.png
+│   ├── 04-revenue-reconciliation-overview.png
+│   ├── 05-exception-register.png
+│   ├── 06-issue-follow-up.png
+│   ├── 07-deal-operations-overview.png
+│   ├── 08-rebill-workflow.png
+│   └── 09-methodology-and-limitations.png
 └── README.md
-The data/raw/ and data/processed/ directories are created during use and are ignored by Git. Local follow-up notes and generated source files therefore remain outside the published repository.
+The data/raw/ and data/processed/ directories are created during use and should stay out of the public repository unless intentionally publishing non-sensitive sample data. Never publish cloud credentials or locally saved investigation notes.
 Limitations and next steps
-This project is a demonstration of analytical methods and workflow design, rather than a production royalty accounting system.
-- The finance ledger is simulated from the same allocation model, with two deliberate discrepancies; reconciliation against an independent accounting source has not been demonstrated.
-- Anomaly detection is basic: a three-month rolling standard deviation can exaggerate small movements and does not adjust for trends, seasonality or commercial materiality. A future version would use more history, minimum-impact rules and back-testing.
-- Commercial assumptions are simplified: distribution rates, FX factors and monthly guarantees are fictional. Agreement validity dates and more complex recoupment terms would need additional modelling for real-world use.
-- Pipeline execution is manual: the reporting refresh is not an automated scheduled ingestion process. A production implementation would add orchestration, schema-evolution checks, monitoring and access controls.
+This is a portfolio demonstration, not a production royalty-accounting system.
+- Synthetic records: the ledger is derived from the same underlying allocation model and contains two injected differences. Reconciliation against an independent real finance system has not been established.
+- Basic anomaly method: a three-month rolling standard deviation is sensitive to low volatility and does not account for seasonality, trend or commercial materiality. I'd improve it using more history, materiality rules and back-testing before operational use.
+- Simplified deals: fictional allocation rates, FX factors and minimum guarantees do not cover real contract complexity, recoupment or full agreement-validity logic.
+- Manual ingestion: the Shiny refresh reloads reporting data but does not schedule ingestion. A production pipeline would need orchestration, schema evolution handling, security and monitoring.
 What I learned
-The most useful lesson was that correctly calculating a revenue figure is only part of the analyst's job. It also matters whether that figure can be reconciled, whether a movement can be explained, what uncertainty remains, and how a stakeholder would act on the result. Building the same workflow across R, SQL, BigQuery and Shiny helped me connect data engineering with commercially useful reporting.
+The most useful lesson was that calculating a revenue figure is only part of the analyst's job. It also matters whether that figure can be reconciled, whether a movement can be explained, what remains uncertain, and how a stakeholder would act on the result. Working across R, SQL, BigQuery and Shiny helped me connect data engineering with commercially useful reporting and clear communication.iny helped me connect data engineering with commercially useful reporting.
